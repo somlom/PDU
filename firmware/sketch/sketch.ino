@@ -1,78 +1,66 @@
-// int iterator = 0;
-// int SOCKETS[10] = { 26, 25, 23, 22, 21, 19, 18, 5, 4, 2 };
-// int DOWN[10] = {};
+#include <LiquidCrystal_I2C.h>
 
-// void setup() {
-//   for (int i = 0; i < 10; i++) {
-//     pinMode(SOCKETS[i], OUTPUT);
-//   }
-//   // put your setup code here, to run once:
-// }
+const int SOCKETS[4] = { 18, 19, 20, 21 };
+int DOWN[4] = {};
+LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 16, 2);
 
-// void loop() {
-//   if (iterator > 9) {
-//     for (int i = 0; i < 10; i++) {
-//       digitalWrite(SOCKETS[i], LOW);
-//     }
-//     iterator = 0;
-//   }
-//   DOWN[iterator] = SOCKETS[iterator];
-//   for (int i = 0; i < 10; i++) {
-//     digitalWrite(SOCKETS[DOWN[i]], HIGH);
-//   }
-//   iterator++;
-//   delay(1000);
-//   // put your main code here, to run repeatedly:
-// }
-// #include <LiquidCrystal_I2C.h>
-
-#define SDA 12;
-#define SCL 14;
-
-int iterator = 0;
-int index_i = 0;
-const int SOCKETS[6] = { 23, 22, 21, 19, 18, 5 };
-int DOWN[6] = {};
+uint8_t ON[10] = {
+  0b11111,
+  0b11111,
+  0b11111,
+  0b11111,
+  0b11111,
+  0b11111,
+  0b11111,
+  0b11111,
+};
+uint8_t OFF[10]  = {
+  0b11111,
+  0b10001,
+  0b10001,
+  0b10001,
+  0b10001,
+  0b10001,
+  0b10001,
+  0b11111,
+};
 
 void setup() {
-  for (int i = 0; i < 6; i++) {
+  lcd.init();
+  lcd.createChar(1, ON);
+  lcd.createChar(2, OFF);
+  lcd.backlight();
+  // lcd.setCursor(0, 0);
+  for (int i = 0; i < 4; i++) {
     pinMode(SOCKETS[i], OUTPUT);
     digitalWrite(SOCKETS[i], HIGH);
+
+    lcd.setCursor(i, 0);
+    lcd.print("\x02");
+
+    lcd.setCursor(i, 1);
+    lcd.print(i + 1);
   }
-  // put your setup code here, to run once:
+  delay(2000);
+  digitalWrite(21, LOW);
 }
-
-void removeFromArray(int* arr, int size, int index) {
-  if (index < 0 || index >= size) {
-    return;  // Invalid index
-  }
-
-  for (int i = index; i < size - 1; i++) {
-    arr[i] = arr[i + 1];  // Shift elements to the left
-  }
-  size--;  // Decrease the size of the array
-}
-
 
 void loop() {
-  if (iterator > 50) {
-    iterator = 0;
-  }
-  if (index_i > 6) {
-    index_i = 0;
-  }
-  DOWN[index_i] = SOCKETS[random(0, 6)];
-  for (int i = 0; i < 6; i++) {
-    if (iterator == DOWN[i]) {
-      digitalWrite(DOWN[i], LOW);
+  for (int i = 0; i < 4; i++) {
+    lcd.setCursor(i, 0);
+    // lcd.setCursor(0, 0 + i);
+    // if (DOWN[i] == SOCKETS[i]) {
+    if (digitalRead(SOCKETS[i]) == LOW) {
+      digitalWrite(SOCKETS[i], HIGH);
+      lcd.print("\x01");
+    } else {
+      digitalWrite(SOCKETS[i], LOW);
+      lcd.print("\x02");
     }
-    if (DOWN[i] > iterator) {
-      digitalWrite(DOWN[i], HIGH);
-      removeFromArray(DOWN, 6, i);
-    }
+    lcd.setCursor(i, 1);
+    lcd.print(i + 1);
+
   }
-  delay(100);
-  iterator++;
-  index_i++;
-  // put your main code here, to run repeatedly:
+  delay(1000); // this speeds up the simulation
+  lcd.clear();
 }
