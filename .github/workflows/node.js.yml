@@ -27,6 +27,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
         cache-dependency-path: server/package.json
+    - run: yarn set version stable
     - run: yarn install
     # - run: yarn run build 
     # - run: yarn test
