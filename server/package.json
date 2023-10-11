@@ -7,13 +7,14 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@types/jest": "^29.5.5",
     "eslint": "^8.48.0",
     "prettier": "^3.0.3",
     "tsconfig": "*",
     "turbo": "latest"
   },
   "name": "server",
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@3.6.4",
   "workspaces": [
     "apps/*",
     "packages/*"
