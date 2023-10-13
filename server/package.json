@@ -6,17 +6,21 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
-  "devDependencies": {
-    "@types/jest": "^29.5.5",
-    "eslint": "^8.48.0",
-    "prettier": "^3.0.3",
-    "tsconfig": "*",
-    "turbo": "latest"
-  },
   "name": "server",
   "packageManager": "yarn@3.6.4",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "eslint-import-resolver-typescript": "^3.6.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "eslint": "^8.48.0",
+    "prettier": "^3.0.3",
+    "tsconfig": "*",
+    "turbo": "latest",
+    "typescript": "^5.2.2"
+  }
 }

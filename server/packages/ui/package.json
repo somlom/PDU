@@ -16,6 +16,9 @@
     "eslint-config-custom": "*",
     "react": "^18.2.0",
     "tsconfig": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "eslint-import-resolver-typescript": "^3.6.1"
   }
 }
