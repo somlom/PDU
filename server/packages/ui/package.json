@@ -21,6 +21,8 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "eslint-import-resolver-typescript": "^3.6.1"
+    "bootstrap": "^5.3.2",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "react-bootstrap": "^2.9.0"
   }
 }
