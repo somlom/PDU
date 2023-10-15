@@ -35,19 +35,32 @@ void setup() {
   for (int i = 0; i < 4; i++) {
     pinMode(SOCKETS[i], OUTPUT);
     digitalWrite(SOCKETS[i], HIGH);
-
-    lcd.print(i + 1);
     lcd.print("\x02");
-    lcd.print(" ");
   }
   delay(2000);
-  digitalWrite(21, LOW);
+}
+
+void error(String message){
+  lcd.clear();
+
+  lcd.setCursor(0, 0);
+  lcd.print("ERROR!!!");
+
+  lcd.setCursor(0, 1);
+  lcd.print(message);
+  
+  for (int i = 0; i < 2; i++) {
+    lcd.noBacklight();
+    delay(500);
+    lcd.backlight();
+    delay(500);
+  }
+  lcd.clear();
 }
 
 void loop() {
   lcd.setCursor(0, 0);
   for (int i = 0; i < 4; i++) {
-    lcd.print(i + 1);
     if (digitalRead(SOCKETS[i]) == LOW) {
       digitalWrite(SOCKETS[i], HIGH);
       lcd.print("\x01");
@@ -55,7 +68,6 @@ void loop() {
       digitalWrite(SOCKETS[i], LOW);
       lcd.print("\x02");
     }
-    lcd.print(" ");
   }
   delay(1000); // this speeds up the simulation
 }
