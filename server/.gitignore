@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules
+dist
 .pnp
 .pnp.js
 
@@ -12,6 +13,7 @@ coverage
 .next/
 out/
 build
+.yarn
 
 # misc
 .DS_Store
@@ -38,5 +40,3 @@ yarn-error.log*
 #cache
 .yarn/cache
 
-.yarn
-dist
