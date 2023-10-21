@@ -1,15 +1,13 @@
 import * as React from "react";
 
-interface Props {
+export function Sidebar({ children, label }: {
   children?: React.ReactNode;
   label?: string;
-}
-
-export const Sidebar = ({ children, label }: Props) => {
+}) {
   return (
     <div>
       <h1>{label}</h1>
       {children}
     </div>
   );
-};
+}

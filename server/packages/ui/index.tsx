@@ -1,3 +1,3 @@
 // component exports
-export * from "./Sidebar";
+export * from "./sidebar";
 export { Card } from "./card";
