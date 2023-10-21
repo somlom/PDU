@@ -7201,6 +7201,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"components@workspace:packages/components":
+  version: 0.0.0-use.local
+  resolution: "components@workspace:packages/components"
+  dependencies:
+    "@popperjs/core": ^2.11.8
+    "@turbo/gen": ^1.10.12
+    "@types/node": ^20.8.5
+    "@types/react": ^18.2.0
+    "@types/react-dom": ^18.2.0
+    bootstrap: ^5.3.2
+    eslint: ^8.51.0
+    eslint-config-custom: "*"
+    eslint-import-resolver-typescript: ^3.6.1
+    eslint-plugin-import: ^2.28.1
+    react: ^18.2.0
+    react-bootstrap: ^2.9.0
+    react-dom: ^18.2.0
+    tsconfig: "*"
+    typescript: ^5.2.2
+  languageName: unknown
+  linkType: soft
+
 "compressible@npm:~2.0.16":
   version: 2.0.18
   resolution: "compressible@npm:2.0.18"
@@ -7962,27 +7984,6 @@ __metadata:
   checksum: fa05e18324510d7283f55862f3161c6759a3f2f8dbce491a2fc14c8324c498286c54282c1f0e933cb930da8419b30679389499b919122952a4f8592362ef4615
   languageName: node
   linkType: hard
-
-"docs@workspace:apps/docs":
-  version: 0.0.0-use.local
-  resolution: "docs@workspace:apps/docs"
-  dependencies:
-    "@next/eslint-plugin-next": ^13.4.19
-    "@types/node": ^17.0.12
-    "@types/react": ^18.0.22
-    "@types/react-dom": ^18.0.7
-    eslint: ^8.51.0
-    eslint-config-custom: "*"
-    eslint-import-resolver-typescript: ^3.6.1
-    eslint-plugin-import: ^2.28.1
-    next: ^13.4.19
-    react: ^18.2.0
-    react-dom: ^18.2.0
-    tsconfig: "*"
-    typescript: ^4.5.3
-    ui: "*"
-  languageName: unknown
-  linkType: soft
 
 "doctrine@npm:^2.1.0":
   version: 2.1.0
