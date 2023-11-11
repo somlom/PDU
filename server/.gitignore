@@ -13,7 +13,6 @@ coverage
 .next/
 out/
 build
-.yarn
 
 # misc
 .DS_Store
