@@ -1,6 +1,5 @@
-// {
-//   "deno.enable": true,
-//   "deno.lint": true,
-//   "editor.defaultFormatter": "denoland.vscode-deno",
-//   "deno.config": "server/deno.json",
-// }
+{
+    "deno.enable": true,
+    "deno.lint": true,
+    "deno.unstable": false
+}
