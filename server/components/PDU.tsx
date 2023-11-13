@@ -23,7 +23,8 @@ export const PDU_PanelComponent = (props: PDU_PanelComponentProps) => {
           <Tooltip
             variant={props.item.connected ? "success" : "danger"}
             square
-          ></Tooltip>
+          >
+          </Tooltip>
           <span>{props.item.name}</span>
         </div>
 
@@ -32,16 +33,18 @@ export const PDU_PanelComponent = (props: PDU_PanelComponentProps) => {
           <span>consumption: {props.item.consumption}W</span>
         </div>
       </div>
-      <div className={"flex flex-row p-2 flex-wrap"}>{props.children}</div>
+      <div className={"flex flex-col p-2 self-center"}>{props.children}</div>
     </Card>
   );
 };
 export const PDU_PanelComponentElement = ({
   outlet,
-  index,
 }: {
-  outlet: { active: boolean; consumption: number };
-  index: number;
+  outlet: {
+    name: string;
+    active: boolean;
+    consumption: number;
+  };
 }) => {
   return (
     <Card className={"m-2"} style={{ minWidth: "250px" }}>
@@ -49,8 +52,9 @@ export const PDU_PanelComponentElement = ({
         <Tooltip
           variant={outlet.active ? "success" : "danger"}
           square
-        ></Tooltip>
-        <span>{outlet.active ? "active" : "disabled"}</span>
+        >
+        </Tooltip>
+        <span>{outlet.name}</span>
       </div>
       consumption: {outlet.consumption}W
     </Card>
