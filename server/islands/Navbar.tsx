@@ -8,8 +8,14 @@ export const Navbar = (props: JSX.HTMLAttributes<HTMLDivElement>) => {
   const showOffcanvas = useSignal<boolean>(false);
 
   return (
-    <>
-      <Button onClick={() => (showOffcanvas.value = true)}>---</Button>
+    <div className="flex flex-row items-center">
+      <Button className="m-2" onClick={() => (showOffcanvas.value = true)}>
+        ---
+      </Button>
+      <div className="p-2 flex flex-row items-center">
+        <img src={"/variant1.png"} style={{ height: "30px" }} alt="Logo" />
+        Pulse
+      </div>
 
       <OffCanvas
         show={showOffcanvas.value}
@@ -17,6 +23,6 @@ export const Navbar = (props: JSX.HTMLAttributes<HTMLDivElement>) => {
       >
         <OffCanvasElement>asd</OffCanvasElement>
       </OffCanvas>
-    </>
+    </div>
   );
 };

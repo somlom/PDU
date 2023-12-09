@@ -23,8 +23,7 @@ export const PDU_PanelComponent = (props: PDU_PanelComponentProps) => {
           <Tooltip
             variant={props.item.connected ? "success" : "danger"}
             square
-          >
-          </Tooltip>
+          ></Tooltip>
           <span>{props.item.name}</span>
         </div>
 
@@ -52,8 +51,7 @@ export const PDU_PanelComponentElement = ({
         <Tooltip
           variant={outlet.active ? "success" : "danger"}
           square
-        >
-        </Tooltip>
+        ></Tooltip>
         <span>{outlet.name}</span>
       </div>
       consumption: {outlet.consumption}W
