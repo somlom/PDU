@@ -5,19 +5,20 @@ import {
   PDU_PanelComponentElement,
 } from "../components/PDU.tsx";
 
+type IOutlet = {
+  name: string;
+  active: boolean;
+  consumption: number;
+};
+interface IPDU {
+  name: string;
+  connected: boolean;
+  consumption: number;
+  outlets: IOutlet[];
+}
 export function PDU_Panel() {
   const [data, setData] = useState<
-    | {
-        name: string;
-        connected: boolean;
-        consumption: number;
-        outlets: {
-          name: string;
-          active: boolean;
-          consumption: number;
-        }[];
-      }[]
-    | null // State can be null initially
+    IPDU[] | null // State can be null initially
   >(null);
 
   const fetchData = async () => {
@@ -45,7 +46,6 @@ export function PDU_Panel() {
           </PDU_PanelComponent>
         ))
       ) : (
-        // <p>Loading...</p>
         <div
           class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
           role="status"

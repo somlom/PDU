@@ -3,13 +3,25 @@ import { JSX } from "preact";
 interface OffCanvasProps extends JSX.HTMLAttributes {
   show: boolean;
 }
-export function OffCanvasElement(props: JSX.HTMLAttributes<HTMLAnchorElement>) {
+interface OffCanvasElementProps {
+  href: string;
+  title: string;
+  className?: string;
+}
+
+export function OffCanvasElement({
+  href,
+  title,
+  className,
+}: OffCanvasElementProps) {
   return (
     <a
-      href={props.href}
-      className="block py-2 px-4 text-white hover:bg-gray-700"
+      href={href}
+      className={
+        "block py-2 px-4 text-white hover:bg-gray-700 " + (className || "")
+      }
     >
-      {props.children}
+      {title}
     </a>
   );
 }

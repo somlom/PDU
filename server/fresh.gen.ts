@@ -2,35 +2,40 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $0 from "./routes/_404.tsx";
-import * as $1 from "./routes/_app.tsx";
-import * as $2 from "./routes/api/status.ts";
-import * as $3 from "./routes/auth/login.ts";
-import * as $4 from "./routes/auth/register.ts";
-import * as $5 from "./routes/greet/[name].tsx";
-import * as $6 from "./routes/index.tsx";
-import * as $7 from "./routes/panel/_layout.tsx";
-import * as $8 from "./routes/panel/index.tsx";
-import * as $$0 from "./islands/Navbar.tsx";
-import * as $$1 from "./islands/PDU.tsx";
+import * as $_auth_layout from "./routes/(auth)/_layout.tsx";
+import * as $_auth_login_index from "./routes/(auth)/login/index.tsx";
+import * as $_auth_register_index from "./routes/(auth)/register/index.tsx";
+import * as $_404 from "./routes/_404.tsx";
+import * as $_app from "./routes/_app.tsx";
+import * as $api_status from "./routes/api/status.ts";
+import * as $index from "./routes/index.tsx";
+import * as $panel_layout from "./routes/panel/_layout.tsx";
+import * as $panel_index from "./routes/panel/index.tsx";
+import * as $Login from "./islands/Login.tsx";
+import * as $Navbar from "./islands/Navbar.tsx";
+import * as $PDU from "./islands/PDU.tsx";
+import * as $Register from "./islands/Register.tsx";
+import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
-    "./routes/_404.tsx": $0,
-    "./routes/_app.tsx": $1,
-    "./routes/api/status.ts": $2,
-    "./routes/auth/login.ts": $3,
-    "./routes/auth/register.ts": $4,
-    "./routes/greet/[name].tsx": $5,
-    "./routes/index.tsx": $6,
-    "./routes/panel/_layout.tsx": $7,
-    "./routes/panel/index.tsx": $8,
+    "./routes/(auth)/_layout.tsx": $_auth_layout,
+    "./routes/(auth)/login/index.tsx": $_auth_login_index,
+    "./routes/(auth)/register/index.tsx": $_auth_register_index,
+    "./routes/_404.tsx": $_404,
+    "./routes/_app.tsx": $_app,
+    "./routes/api/status.ts": $api_status,
+    "./routes/index.tsx": $index,
+    "./routes/panel/_layout.tsx": $panel_layout,
+    "./routes/panel/index.tsx": $panel_index,
   },
   islands: {
-    "./islands/Navbar.tsx": $$0,
-    "./islands/PDU.tsx": $$1,
+    "./islands/Login.tsx": $Login,
+    "./islands/Navbar.tsx": $Navbar,
+    "./islands/PDU.tsx": $PDU,
+    "./islands/Register.tsx": $Register,
   },
   baseUrl: import.meta.url,
-};
+} satisfies Manifest;
 
 export default manifest;

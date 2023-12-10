@@ -1,12 +1,38 @@
 import { useSignal } from "@preact/signals";
-import { JSX } from "preact";
 
 import { OffCanvas, OffCanvasElement } from "../components/OffCanvas.tsx";
 import { Button } from "../components/Button.tsx";
 
-export const Navbar = (props: JSX.HTMLAttributes<HTMLDivElement>) => {
-  const showOffcanvas = useSignal<boolean>(false);
+type NavElement = {
+  href: string;
+  title: string;
+};
+interface INavBar {
+  data: NavElement[];
+}
 
+interface IOCEI {
+  key: string;
+  title: string;
+  href: string;
+}
+const OffCanvasElementIsland = ({ key, title, href }: IOCEI) => {
+  if (window.location && window.location.pathname === href) {
+    return (
+      <OffCanvasElement
+        className={"bg-gray-700"}
+        key={key}
+        title={title}
+        href={href}
+      />
+    );
+  } else {
+    return <OffCanvasElement key={key} title={title} href={href} />;
+  }
+};
+
+export const Navbar = ({ data }: INavBar) => {
+  const showOffcanvas = useSignal<boolean>(false);
   return (
     <div className="flex flex-row items-center">
       <Button className="m-2" onClick={() => (showOffcanvas.value = true)}>
@@ -21,7 +47,13 @@ export const Navbar = (props: JSX.HTMLAttributes<HTMLDivElement>) => {
         show={showOffcanvas.value}
         onClick={() => (showOffcanvas.value = false)}
       >
-        <OffCanvasElement>asd</OffCanvasElement>
+        {data.map((obj) => (
+          <OffCanvasElementIsland
+            key={obj.href}
+            title={obj.title}
+            href={obj.href}
+          />
+        ))}
       </OffCanvas>
     </div>
   );
