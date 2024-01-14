@@ -23,7 +23,7 @@ void setup() {
 
   for (int i = 0; i < 4; i++) {
     pinMode(SOCKETS[i], OUTPUT);
-    digitalWrite(SOCKETS[i], HIGH);
+    digitalWrite(SOCKETS[i], LOW); // LOW on MAIN circuit
   }
 
   WiFi.mode(WIFI_STA);
@@ -104,9 +104,9 @@ void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     for (int i = 0; i < 4; i++) {
       if (DOWN[i] >= getSeconds(rtc)) {
-        digitalWrite(SOCKETS[i], HIGH);
+        digitalWrite(SOCKETS[i], LOW); // 
       } else {
-        digitalWrite(SOCKETS[i], LOW);
+        digitalWrite(SOCKETS[i], HIGH);
       }
     }
 
