@@ -7,6 +7,10 @@ import * as $_auth_login_index from "./routes/(auth)/login/index.tsx";
 import * as $_auth_register_index from "./routes/(auth)/register/index.tsx";
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
+import * as $api_auth_login from "./routes/api/auth/login.ts";
+import * as $api_auth_register from "./routes/api/auth/register.ts";
+import * as $api_getTelemetry from "./routes/api/getTelemetry.ts";
+import * as $api_shutdown from "./routes/api/shutdown.ts";
 import * as $api_status from "./routes/api/status.ts";
 import * as $index from "./routes/index.tsx";
 import * as $panel_layout from "./routes/panel/_layout.tsx";
@@ -24,6 +28,10 @@ const manifest = {
     "./routes/(auth)/register/index.tsx": $_auth_register_index,
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
+    "./routes/api/auth/login.ts": $api_auth_login,
+    "./routes/api/auth/register.ts": $api_auth_register,
+    "./routes/api/getTelemetry.ts": $api_getTelemetry,
+    "./routes/api/shutdown.ts": $api_shutdown,
     "./routes/api/status.ts": $api_status,
     "./routes/index.tsx": $index,
     "./routes/panel/_layout.tsx": $panel_layout,
