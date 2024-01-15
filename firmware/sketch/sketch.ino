@@ -20,7 +20,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   lcd.setCursor(0, 0);
-
+  
   for (int i = 0; i < 4; i++) {
     pinMode(SOCKETS[i], OUTPUT);
     digitalWrite(SOCKETS[i], LOW); // LOW on MAIN circuit
