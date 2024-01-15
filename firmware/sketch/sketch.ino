@@ -1,46 +1,96 @@
 #include <LiquidCrystal_I2C.h>
+#include "RTClib.h"
+#include "rtc.h"
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include "ArduinoJson.h"
 
-const int SOCKETS[4] = { 18, 19, 20, 21 };
-int DOWN[4] = {};
+const int SOCKETS[4] = { 16, 17, 18, 19 };
+int DOWN[4] = { 0, 0, 0, 0 };  // time in seconds
+
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 16, 2);
+RTC_DS3231 rtc;
 
-uint8_t ON[10] = {
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-};
-uint8_t OFF[10]  = {
-  0b11111,
-  0b10001,
-  0b10001,
-  0b10001,
-  0b10001,
-  0b10001,
-  0b10001,
-  0b11111,
-};
+AsyncWebServer server(8000);
 
 void setup() {
+  rtc.begin();
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+
   lcd.init();
-  lcd.createChar(1, ON);
-  lcd.createChar(2, OFF);
   lcd.backlight();
   lcd.setCursor(0, 0);
   
   for (int i = 0; i < 4; i++) {
     pinMode(SOCKETS[i], OUTPUT);
-    digitalWrite(SOCKETS[i], HIGH);
-    lcd.print("\x02");
+    digitalWrite(SOCKETS[i], LOW); // LOW on MAIN circuit
   }
-  delay(2000);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin("PL-2.4", "QWErty78()");
+  lcd.println("Connecting...");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(100);
+  }
+
+  lcd.clear();
+  lcd.println(WiFi.localIP());
+  delay(5000);
+  // Define the API endpoint
+  server.on("/esp/getTelementry", HTTP_GET, [](AsyncWebServerRequest *request) {
+    JsonDocument doc;
+
+    JsonArray socketsDown = doc["socketsDown"].to<JsonArray>();
+
+    int time = getSeconds(rtc);
+
+    for (int i = 0; i < 4; i++) {
+      if (DOWN[i] > time) {
+        socketsDown.add(SOCKETS[i]);
+      }
+    }
+    doc["time"] = getSeconds(rtc);
+
+    String output;
+
+    doc.shrinkToFit();  // optional
+
+    serializeJson(doc, output);
+
+    // Send the JSON response
+    request->send(200, "application/json", output);
+  });
+
+  server.on("/esp/shutdown", HTTP_GET, [](AsyncWebServerRequest *request) {
+    // Parse parameters from the request
+    String socketParam = request->getParam("socket")->value();
+    String timeParam = request->getParam("time")->value();
+
+    // Convert parameters to integers
+    int socket = socketParam.toInt();
+    int time = timeParam.toInt();
+
+    DOWN[socket] = getSeconds(rtc) + time;
+
+    JsonDocument doc;
+
+    doc["message"] = "Shutdown successfully";
+
+    String output;
+
+    doc.shrinkToFit();  // optional
+
+    serializeJson(doc, output);
+
+    // Send the JSON response
+    request->send(200, "application/json", output);
+  });
+
+  server.begin();
 }
 
-void error(String message){
+void error(String message) {
   lcd.clear();
 
   lcd.setCursor(0, 0);
@@ -48,26 +98,27 @@ void error(String message){
 
   lcd.setCursor(0, 1);
   lcd.print(message);
-  
-  for (int i = 0; i < 2; i++) {
-    lcd.noBacklight();
-    delay(500);
-    lcd.backlight();
-    delay(500);
-  }
-  lcd.clear();
 }
 
 void loop() {
-  lcd.setCursor(0, 0);
-  for (int i = 0; i < 4; i++) {
-    if (digitalRead(SOCKETS[i]) == LOW) {
-      digitalWrite(SOCKETS[i], HIGH);
-      lcd.print("\x01");
-    } else {
-      digitalWrite(SOCKETS[i], LOW);
-      lcd.print("\x02");
+  if (WiFi.status() == WL_CONNECTED) {
+    for (int i = 0; i < 4; i++) {
+      if (DOWN[i] >= getSeconds(rtc)) {
+        digitalWrite(SOCKETS[i], LOW); // 
+      } else {
+        digitalWrite(SOCKETS[i], HIGH);
+      }
     }
+
+    // Update LCD display
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Timestamp:");
+    lcd.setCursor(0, 1);
+    lcd.println(rtc.now().timestamp());
+
+    delay(1000);  // Adjust the delay according to your needs
+  } else {
+    error("disconnected");
   }
-  delay(1000); // this speeds up the simulation
 }

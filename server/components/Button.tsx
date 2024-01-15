@@ -27,7 +27,6 @@ export const Button = (props: ButtonProps) => {
       props.class = "bg-white border-1 border-black";
       break;
   }
-
   return (
     <button
       {...props}
