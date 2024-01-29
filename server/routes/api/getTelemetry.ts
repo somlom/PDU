@@ -14,7 +14,7 @@ export const handler: Handlers = {
 
     let timerId = 0;
 
-    const checkForUpdates = async () => {
+    const refetchData = async () => {
       try {
         const telemetryData = await fetchTelemetryFromESP();
         sendDataEvent(sseTarget, telemetryData);
@@ -22,14 +22,14 @@ export const handler: Handlers = {
         return new Response(`Error fetching telemetry: ${error.message}`);
       }
 
-      timerId = setTimeout(checkForUpdates, PUSH_DELAY_MILLISECONDS);
+      timerId = setTimeout(refetchData, PUSH_DELAY_MILLISECONDS);
     };
 
     sseTarget.addEventListener("close", () => {
       clearTimeout(timerId);
     });
 
-    checkForUpdates();
+    refetchData();
     return sseTarget.asResponse();
   },
 };
@@ -44,19 +44,19 @@ function sendDataEvent(
   sseTarget.dispatchEvent(sse);
 }
 
-async function fetchTelemetryFromESP(): Promise<string> {
-  const apiUrl = "http://192.168.178.149:8000/esp/getTelementry";
+async function fetchTelemetryFromESP(): Promise<object> {
+  const apiUrl = "http://192.168.178.149:80/getTelemetry";
 
   try {
     const response = await fetch(apiUrl);
     if (!response.ok) {
-      return `Failed to fetch telemetry: ${response.statusText}`;
+      return { message: `Failed to fetch telemetry: ${response.statusText}` };
     }
 
-    const responseBody = await response.text();
+    const responseBody = await response.json();
 
     return JSON.parse(responseBody);
   } catch (error) {
-    return `Error fetching telemetry: ${error.message}`;
+    return { message: `Failed to fetch telemetry: ${error.message}` };
   }
 }

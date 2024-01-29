@@ -8,10 +8,7 @@ export const handler: Handlers = {
 
     if (Number.isFinite(socket) && Number.isFinite(time)) {
       const apiUrl =
-        "http://192.168.178.149:8000/esp/shutdown?socket=" +
-        socket +
-        "&time=" +
-        time;
+        "http://192.168.178.149:80/shutdown?socket=" + socket + "&time=" + time;
       const response = await fetch(apiUrl);
       return new Response(await response.json());
     } else {

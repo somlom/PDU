@@ -8,15 +8,21 @@ export const login = async (
     return new Response(
       JSON.stringify({
         status: 400,
-        body: "Bad Request: Missing request body",
+        body: "Bad Request: Missing token parameter",
       })
     );
   }
 
-  const { body } = await _req.json();
-
-  // Now you can parse the body as needed
-  const parsedBody = JSON.parse(body);
-
-  return new Response(parsedBody);
+  const token = new URL(_req.url).searchParams.get("token");
+  if (token) {
+    //https://deno.land/x/otpauth@v9.2.1
+    return new Response();
+  } else {
+    return new Response(
+      JSON.stringify({
+        status: 400,
+        body: "Bad Request: Missing token parameter",
+      })
+    );
+  }
 };
