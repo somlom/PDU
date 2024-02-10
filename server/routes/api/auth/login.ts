@@ -2,21 +2,18 @@ import { FreshContext } from "$fresh/server.ts";
 
 export const login = async (
   _req: Request,
-  _ctx: FreshContext
+  _ctx: FreshContext,
 ): Promise<Response> => {
-  if (!_req.body) {
+  const token = new URL(_req.url).searchParams.get("token");
+  if (!_req.body || !token) {
     return new Response(
       JSON.stringify({
         status: 400,
-        body: "Bad Request: Missing request body",
-      })
+        body: "Bad Request: Missing token parameter",
+      }),
     );
   }
 
-  const { body } = await _req.json();
-
-  // Now you can parse the body as needed
-  const parsedBody = JSON.parse(body);
-
-  return new Response(parsedBody);
+  //https://deno.land/x/otpauth@v9.2.1
+  return new Response();
 };

@@ -4,7 +4,7 @@ import {
   ServerSentEventStreamTarget,
 } from "$std/http/server_sent_event.ts";
 
-const PUSH_DELAY_MILLISECONDS = 1000; // Set to 1000ms for 1 second
+const PUSH_DELAY_MILLISECONDS = 250; // Set to 250ms for 1 second
 
 export const handler: Handlers = {
   GET(_req) {
@@ -14,29 +14,29 @@ export const handler: Handlers = {
 
     let timerId = 0;
 
-    const checkForUpdates = async () => {
+    const refetchData = async () => {
       try {
-        const telemetryData = await fetchTelemetryFromESP();
+        const telemetryData = await fetchTelemetry();
         sendDataEvent(sseTarget, telemetryData);
       } catch (error) {
         return new Response(`Error fetching telemetry: ${error.message}`);
       }
 
-      timerId = setTimeout(checkForUpdates, PUSH_DELAY_MILLISECONDS);
+      timerId = setTimeout(refetchData, PUSH_DELAY_MILLISECONDS);
     };
 
     sseTarget.addEventListener("close", () => {
       clearTimeout(timerId);
     });
 
-    checkForUpdates();
+    refetchData();
     return sseTarget.asResponse();
   },
 };
 
 function sendDataEvent(
   sseTarget: ServerSentEventStreamTarget,
-  telemetryData: any
+  telemetryData: { socketsDown: number[]; time: number } | undefined,
 ) {
   const sse = new ServerSentEvent("message", {
     data: JSON.stringify(telemetryData),
@@ -44,19 +44,18 @@ function sendDataEvent(
   sseTarget.dispatchEvent(sse);
 }
 
-async function fetchTelemetryFromESP(): Promise<string> {
-  const apiUrl = "http://192.168.178.149:8000/esp/getTelementry";
+async function fetchTelemetry(): Promise<
+  { socketsDown: number[]; time: number } | undefined
+> {
+  const apiUrl = "http://192.168.178.149:80/getTelemetry";
 
-  try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      return `Failed to fetch telemetry: ${response.statusText}`;
-    }
-
-    const responseBody = await response.text();
-
-    return JSON.parse(responseBody);
-  } catch (error) {
-    return `Error fetching telemetry: ${error.message}`;
+  const response = await fetch(apiUrl);
+  if (!response.ok) {
+    return undefined;
   }
+
+  const responseBody: { socketsDown: number[]; time: number } = await response
+    .json();
+
+  return responseBody;
 }

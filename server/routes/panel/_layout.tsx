@@ -10,7 +10,6 @@ export default function Layout({ Component }: LayoutProps) {
           { href: "/panel/controls", title: "Controls" },
           { href: "/panel/consumption", title: "Consumption" },
           { href: "/panel/logs", title: "Logs" },
-          { href: "/panel/rules", title: "Rules" },
           { href: "/docs", title: "Docs" },
         ]}
       />
