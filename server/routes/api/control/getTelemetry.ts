@@ -4,7 +4,7 @@ import {
   ServerSentEventStreamTarget,
 } from "$std/http/server_sent_event.ts";
 
-const PUSH_DELAY_MILLISECONDS = 1000; // Set to 1000ms for 1 second
+const PUSH_DELAY_MILLISECONDS = 250; // Set to 250ms for 1 second
 
 export const handler: Handlers = {
   GET(_req) {
@@ -16,7 +16,7 @@ export const handler: Handlers = {
 
     const refetchData = async () => {
       try {
-        const telemetryData = await fetchTelemetryFromESP();
+        const telemetryData = await fetchTelemetry();
         sendDataEvent(sseTarget, telemetryData);
       } catch (error) {
         return new Response(`Error fetching telemetry: ${error.message}`);
@@ -36,7 +36,7 @@ export const handler: Handlers = {
 
 function sendDataEvent(
   sseTarget: ServerSentEventStreamTarget,
-  telemetryData: any
+  telemetryData: { socketsDown: number[]; time: number } | undefined,
 ) {
   const sse = new ServerSentEvent("message", {
     data: JSON.stringify(telemetryData),
@@ -44,19 +44,18 @@ function sendDataEvent(
   sseTarget.dispatchEvent(sse);
 }
 
-async function fetchTelemetryFromESP(): Promise<object> {
+async function fetchTelemetry(): Promise<
+  { socketsDown: number[]; time: number } | undefined
+> {
   const apiUrl = "http://192.168.178.149:80/getTelemetry";
 
-  try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      return { message: `Failed to fetch telemetry: ${response.statusText}` };
-    }
-
-    const responseBody = await response.json();
-
-    return JSON.parse(responseBody);
-  } catch (error) {
-    return { message: `Failed to fetch telemetry: ${error.message}` };
+  const response = await fetch(apiUrl);
+  if (!response.ok) {
+    return undefined;
   }
+
+  const responseBody: { socketsDown: number[]; time: number } = await response
+    .json();
+
+  return responseBody;
 }
