@@ -1,6 +1,7 @@
 #include <WiFi.h>
 
-void WIFIBegin(){
+void WIFIBegin()
+{
   WiFi.mode(WIFI_STA);
   WiFi.begin("PL", "QWErty78()");
 }

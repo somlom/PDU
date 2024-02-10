@@ -7,8 +7,8 @@
 #include <time.h>
 #include "vars.h"
 
-const int SOCKETS[4] = { 16, 17, 18, 19 };
-int DOWN[4] = { 0, 0, 0, 0 };  // time in seconds
+const int SOCKETS[4] = {16, 17, 18, 19};
+int DOWN[4] = {0, 0, 0, 0}; // time in seconds
 
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 16, 2);
 RTC_DS3231 rtc;
@@ -19,19 +19,23 @@ const int daylightOffset_sec = 3600;
 
 AsyncWebServer server(80);
 
-unsigned long getTime() {
+unsigned long getTime()
+{
   time_t now;
   struct tm timeinfo;
-  if (!getLocalTime(&timeinfo)) {
-    //Serial.println("Failed to obtain time");
+  if (!getLocalTime(&timeinfo))
+  {
+    // Serial.println("Failed to obtain time");
     return (0);
   }
   time(&now);
   return now;
 }
 
-void setup() {
-  for (int i = 0; i < 4; i++) {
+void setup()
+{
+  for (int i = 0; i < 4; i++)
+  {
     pinMode(SOCKETS[i], OUTPUT);
     digitalWrite(SOCKETS[i], HIGH);
   }
@@ -44,7 +48,8 @@ void setup() {
   WiFi.begin(SSID, PASSWD);
   lcd.println("Connecting...");
 
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(100);
   }
 
@@ -55,7 +60,8 @@ void setup() {
   lcd.clear();
   lcd.println(WiFi.localIP());
 
-  server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     JsonDocument doc;
     int serverTs = request->getParam("ts")->value().toInt();
 
@@ -68,10 +74,10 @@ void setup() {
     serializeJson(doc, output);
 
     // Send the JSON response
-    request->send(200, "application/json", output);
-  });
+    request->send(200, "application/json", output); });
   // Define the API endpoint
-  server.on("/getTelemetry", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/getTelemetry", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     JsonDocument doc;
 
     JsonArray socketsDown = doc["socketsDown"].to<JsonArray>();
@@ -90,10 +96,10 @@ void setup() {
     serializeJson(doc, output);
 
     // Send the JSON response
-    request->send(200, "application/json", output);
-  });
+    request->send(200, "application/json", output); });
 
-  server.on("/shutdown", HTTP_GET, [](AsyncWebServerRequest *request) {
+  server.on("/shutdown", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
     // Parse parameters from the request
     String socketParam = request->getParam("socket")->value();
     String timeParam = request->getParam("time")->value();
@@ -115,13 +121,13 @@ void setup() {
     serializeJson(doc, output);
 
     // Send the JSON response
-    request->send(200, "application/json", output);
-  });
+    request->send(200, "application/json", output); });
 
   server.begin();
 }
 
-void error(String message) {
+void error(String message)
+{
   lcd.clear();
 
   lcd.setCursor(0, 0);
@@ -131,12 +137,18 @@ void error(String message) {
   lcd.print(message);
 }
 
-void loop() {
-  if (WiFi.status() == WL_CONNECTED) {
-    for (int i = 0; i < 4; i++) {
-      if (DOWN[i] >= getSeconds(rtc)) {
-        digitalWrite(SOCKETS[i], LOW);  //
-      } else {
+void loop()
+{
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    for (int i = 0; i < 4; i++)
+    {
+      if (DOWN[i] >= getSeconds(rtc))
+      {
+        digitalWrite(SOCKETS[i], LOW); //
+      }
+      else
+      {
         DOWN[i] = 0;
         digitalWrite(SOCKETS[i], HIGH);
       }
@@ -149,8 +161,10 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.println(rtc.now().timestamp());
 
-    delay(250);  // Adjust the delay according to your needs
-  } else {
+    delay(250); // Adjust the delay according to your needs
+  }
+  else
+  {
     error("disconnected");
   }
 }
