@@ -7,13 +7,14 @@ export const handler: Handlers = {
     const time = parseInt(params.get("seconds") || "error");
 
     if (Number.isFinite(socket) && Number.isFinite(time)) {
-      const apiUrl =
-        "http://192.168.178.149:8000/esp/shutdown?socket=" +
-        socket +
-        "&time=" +
-        time;
-      const response = await fetch(apiUrl);
-      return new Response(await response.json());
+      try {
+        const apiUrl = "http://192.168.178.149:80/shutdown?socket=" + socket +
+          "&time=" + time;
+        const response = await fetch(apiUrl);
+        return new Response(response.body);
+      } catch (error) {
+        return new Response(error.message);
+      }
     } else {
       return new Response("error");
     }
