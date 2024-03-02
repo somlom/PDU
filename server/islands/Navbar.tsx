@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals";
+import IconMenu2 from "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/menu-2.tsx";
 
 import { OffCanvas, OffCanvasElement } from "../components/OffCanvas.tsx";
 import { Button } from "../components/Button.tsx";
@@ -17,7 +18,7 @@ interface IOCEI {
   href: string;
 }
 const OffCanvasElementIsland = ({ key, title, href }: IOCEI) => {
-  if (window.location && window.location.pathname === href) {
+  if (globalThis.location && window.location.pathname === href) {
     return (
       <OffCanvasElement
         className={"bg-gray-700"}
@@ -36,7 +37,7 @@ export const Navbar = ({ data }: INavBar) => {
   return (
     <div className="flex flex-row items-center">
       <Button className="m-2" onClick={() => (showOffcanvas.value = true)}>
-        ---
+        <IconMenu2 class="w-6 h-6" />
       </Button>
       <div className="p-2 flex flex-row items-center">
         <img src={"/variant1.png"} style={{ height: "30px" }} alt="Logo" />

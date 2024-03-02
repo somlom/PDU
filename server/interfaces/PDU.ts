@@ -8,5 +8,5 @@ export interface IPDU {
   name: string;
   connected: boolean;
   consumption: number;
-  outlets: IOutlet[];
+  outlets?: IOutlet[];
 }

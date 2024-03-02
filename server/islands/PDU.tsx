@@ -1,24 +1,46 @@
 import { useEffect, useState } from "preact/hooks";
-
-import {
-  PDU_PanelComponent,
-  PDU_PanelComponentElement,
-} from "../components/PDU.tsx";
+import { PDU_PanelComponent } from "../components/PDU.tsx";
 import { IPDU } from "../interfaces/PDU.ts";
+import { Spinner } from "../components/Spinner.tsx";
+// import { EventSource } from "https://deno.land/std/http/server.ts";
 
 export function PDU_Panel() {
-  const [data, setData] = useState<
-    IPDU[] | null // State can be null initially
-  >(null);
+  const [data, setData] = useState<IPDU[] | null>(null);
 
   useEffect(() => {
-    const sse = new EventSource("api/control/getTelemetry");
-    console.log(sse.readyState);
-    sse.onerror = (err) => {
-      console.log("Connection Error");
+    const sse = new EventSource(
+      "http://localhost:8000/api/control/getTelemetry"
+    );
+
+    // Handle heartbeat
+    let heartbeatTimer: number;
+
+    function sendHeartbeat() {
+      // Send a comment as a heartbeat signal
+      sse.dispatchEvent(new Event("ping"));
+      // Reset the timer
+      clearTimeout(heartbeatTimer);
+      heartbeatTimer = setTimeout(handleHeartbeatTimeout, 5000); // Adjust the timeout as needed
+    }
+
+    function handleHeartbeatTimeout() {
+      // Handle connection timeout here
+      console.log("Connection timeout");
+      setData([
+        {
+          name: "PDU-1",
+          connected: false,
+          consumption: 0,
+          outlets: undefined,
+        },
+      ]);
       sse.close();
-    };
-    sse.onmessage = (event) => {
+    }
+
+    sse.addEventListener("message", (event: any) => {
+      // Reset heartbeat timer upon receiving any message
+      sendHeartbeat();
+
       const data = JSON.parse(event.data) as {
         socketsDown: number[];
         time: number;
@@ -30,37 +52,49 @@ export function PDU_Panel() {
         active: socket * 1000 < time,
         consumption: 0,
       }));
-      setData([{
-        name: "PDU-1",
-        connected: true,
-        consumption: 0,
-        outlets: outlets,
-      }]);
+      setData([
+        {
+          name: "PDU-1",
+          connected: true,
+          consumption: 0,
+          outlets: outlets,
+        },
+      ]);
+    });
+
+    sse.addEventListener("error", (err) => {
+      // Handle connection error here
+      console.log("Connection Error:", err);
+      setData([
+        {
+          name: "PDU-1",
+          connected: false,
+          consumption: 0,
+          outlets: undefined,
+        },
+      ]);
+      sse.close();
+    });
+
+    // Initial heartbeat and start heartbeat timer
+    sendHeartbeat();
+
+    // Cleanup function
+    return () => {
+      clearInterval(heartbeatTimer);
+      sse.close();
     };
-  }, []);
+  }, [setTimeout(() => {}, 1000)]);
 
   return (
     <div id="pdu_panel">
-      {data
-        ? (
-          data.map((item, index) => (
-            <PDU_PanelComponent item={item} index={index}>
-              {item.outlets.map((outlet) => (
-                <PDU_PanelComponentElement outlet={outlet} />
-              ))}
-            </PDU_PanelComponent>
-          ))
-        )
-        : (
-          <div
-            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-            role="status"
-          >
-            <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-              Loading...
-            </span>
-          </div>
-        )}
+      {data ? (
+        data.map((item, index) => (
+          <PDU_PanelComponent item={item} index={index} />
+        ))
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 }

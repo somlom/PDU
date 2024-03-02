@@ -6,7 +6,7 @@ export const worker = new Worker(
   new URL("./lib/worker/pinger.ts", import.meta.url).href,
   {
     type: "module",
-  },
+  }
 );
 
 worker.postMessage("start");
