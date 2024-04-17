@@ -8,7 +8,7 @@ export const handler: Handlers = {
 
     if (Number.isFinite(socket) && Number.isFinite(time)) {
       try {
-        const apiUrl = "http://192.168.178.149:80/shutdown?socket=" + socket +
+        const apiUrl = "http://192.168.248.238:80/shutdown?socket=" + socket +
           "&time=" + time;
         const response = await fetch(apiUrl);
         return new Response(response.body);

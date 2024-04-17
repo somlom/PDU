@@ -1,7 +1,7 @@
 #ifndef VARS_H
 #define VARS_H
 
-char *SSID = "PL-2.4";
-char *PASSWD = "QWErty78()";
+char *SSID = "OnePlus Nord2 5G";
+char *PASSWD = "c66j8cpu";
 
 #endif

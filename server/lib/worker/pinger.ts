@@ -1,6 +1,11 @@
 self.onmessage = () => {
-  setInterval(() => {
-    const apiUrl = "http://192.168.178.149/ping";
+  setInterval(async () => {
+    // try {
+    //   await fetch("http://192.168.248.238:80/ping");
+    // } catch {
+    //   console.log("ALARM!!!! DISCONNECTED");
+    // }
+
     // fetch(apiUrl).catch(() => {
     //   console.error("ALARM!!!! DISCONNECTED");
     // });
